@@ -1,0 +1,6 @@
+{
+  "coverage_score": null,
+  "structure_score": null,
+  "relevance_score": null,
+  "raw_output": "```json\n{\n  \"coverage_score\": 8,\n  \"structure_score\": 7,\n  \"relevance_score\": 9\n}\n```\n\nExplanation:\n- **Coverage Score (内容全面性)**: The article discusses many effective strategies and tools for improving team efficiency, indicating a broad coverage of the topic. However, the description suggests there might be a few minor details missing, hence an 8.\n- **Structure Score (结构性)**: The article seems to have a good structure with clear sections discussing strategies and tools. However, the description does not explicitly mention perfect logical flow, suggesting some minor improvements could be made, hence a 7.\n- **Relevance Score (相关性)**: The article is highly focused on the topic of improving team efficiency, indicating strong relevance. Given the depth of discussion on relevant strategies and tools, it deserves a 9, with room for slight improvement to achieve a perfect score."
+}

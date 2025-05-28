@@ -1,0 +1,3 @@
+[console_scripts]
+coreascher = coreascher.main:main
+run_crew = coreascher.main:run_crew

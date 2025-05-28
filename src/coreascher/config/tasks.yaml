@@ -1,0 +1,138 @@
+# tasks.yaml - 定义了系统中所有可执行的任务配置
+# 每个任务都包含描述、期望输出、执行agent和其他必要参数
+
+# ===== 研究框架创建任务 =====
+create_research_framework:
+  # 根据研究主题生成完整的研究框架
+  description: >
+    请为以下研究主题生成一个详细的研究框架:
+    主题: {topic}
+      
+    框架应包含：
+    1. 研究背景
+    2. 研究目标
+    3. 研究内容
+    4. 技术路线
+    5. 预期成果
+  agent: professor_agent  # 由教授Agent执行框架创建
+  expected_output: >
+    一个包含完整研究框架的JSON格式结果，包括：
+    - 各章节标题
+    - 章节内容概述
+    - 技术路线图
+
+# ===== 框架分析任务 =====
+analyze_framework:
+  # 分析研究框架并提供改进建议
+  description: "分析研究框架并提出完善建议"
+  agent: postdoc_agent
+  context: {create_research_framework}
+  expected_output: |
+    {
+      "analysis": {
+        "strengths": ["优点列表"],
+        "weaknesses": ["不足列表"],
+        "suggestions": ["建议列表"]
+      }
+    }
+
+# ===== 关键词分配任务 =====    
+keyword_tasks:
+  # 生成研究任务的具体要求和关键词
+  description: "为研究任务生成具体的搜索关键词和要求"
+  agent: postdoc_agent
+  expected_output: |
+    {
+      "keywords": ["关键词列表"],
+      "requirements": ["要求列表"],
+      "expected_outcomes": ["预期结果列表"]
+    }
+
+# ===== 文献搜索任务 =====
+search_literature:
+  # 根据关键词进行文献搜索
+  description: "根据{keywords}搜索文献"
+  agent: phd_agent  # 由PhD Agent执行文献搜索
+  tools:  # 任务可使用的工具列表
+    - LiteratureSearch
+
+
+# ===== 文献综述任务 =====
+literature_review:
+  # 根据关键词进行文献搜索和综述
+  description: "1. 项目背景对照检查
+   
+     - 根据研究设计{research_design}检测章节草稿{paper_draft}是否遗漏关键领域文献，若检测到文献遗漏，则提示补充；
+     - 结合知识库中的文章纠正因大模型写作时出现的错误引用，如算法名与指标关系不一致等。
+   
+   2. 增补背景与上下文
+   
+     - 对草稿中缺少过渡句、动机阐述不充分的段落进行补写；
+     - 在无歧义的前提下，可合并相似的文献引用或分段。
+   
+   3. 整理全文，将综述文章整理为以下格式
+      1. 摘要
+      2. 综述正文
+      3. 研究现状总结（主要结论和指标对比）
+      4. 未来趋势展望
+   
+   注意：
+   
+   修改过程中保持可追溯引用
+   
+     - 不改变原本的 [paperID-chunkX] 引用结构，若新添加了文献片段，则插入新的引用标记；
+     - 若合并段落，则将引用标记也一并合并。"
+  agent: phd_agent  # 由PhD Agent执行文献综述
+  output_file: literature.json
+
+
+
+# ===== 论文整合任务 =====    
+integrate_paper:
+  # 整合论文内容，确保连贯性和学术规范
+  description: "整合论文段落，确保内容连贯且符合学术规范"
+  agent: postdoc_agent
+  expected_output: |
+    {
+      "integrated_content": "整合后的内容",
+      "modifications": [
+        {
+          "type": "修改类型",
+          "description": "修改说明"
+        }
+      ]
+    }
+
+# ===== 审查评估任务 =====
+review_article_task:
+  # 任务描述：使用大模型对文章进行多维度评估
+  description: >
+    给定文章文本，使用大模型根据预定义的评分规则（内容全面性、结构性、相关性）进行评估。
+    返回包含评分的结果字典，其中包含每个维度的评分（0-10分）。
+  # 定义任务的预期输出格式
+  expected_output: >
+    一个 JSON 格式的字典，包含以下内容：
+    - 内容全面性（coverage_score）
+    - 结构性（structure_score）
+    - 相关性（relevance_score） 
+  agent: reviewer_agent  # 指定执行该任务的Agent
+  input_variables:  # 定义任务所需的输入变量
+    - article_text  # 需要评估的文章文本
+  output_file: evaluation_result.json  # 评估结果的输出文件
+
+# ===== 论文评审任务 =====
+review_paper:
+  # 对论文进行全面评审并提供意见
+  description: >
+    评审论文"{paper_content}"，提供详细的评审意见。
+    需要关注：
+    1. 研究方法的合理性
+    2. 论述的逻辑性
+    3. 创新点
+    4. 实验设计和结果分析
+    5. 改进建议
+  agent: professor_agent
+  expected_output: >
+    一份详细的评审报告，包含优点、缺点和具体的改进建议。
+
+
